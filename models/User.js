@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const {ObjectId} = mongoose.Schema;
 const Schema = mongoose.Schema;
+
 const userSchema =  new Schema({
     name: {
         type: String,
@@ -44,10 +45,21 @@ const userSchema =  new Schema({
         type: ObjectId,
         ref: "padelFields",
         require: true
-    }]
+    }],
+    isActive: Boolean
 
+},
+{
+    timestamps: true,
+    versionKey: false
+}
+)
+
+userSchema.set('toJSON', {
+    transform: (document, returnedObject) => {
+      returnedObject.id = returnedObject._id
+      delete returnedObject._id
+    }
 })
-
-   
 
 module.exports =  mongoose.model('user', userSchema)

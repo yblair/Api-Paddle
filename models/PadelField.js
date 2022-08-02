@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
+
 const padelFieldsSchema =  new Schema({
     location: {
         type: String,
@@ -29,8 +30,22 @@ const padelFieldsSchema =  new Schema({
     price:{
         type: Number,
         require:true
+    },
+    isActive: Boolean
+    },
+    {
+        timestamps: true,
+        versionKey: false
     }
-    })
+)
+
+
+padelFieldsSchema.set('toJSON', {
+    transform: (document, returnedObject) => {
+        returnedObject.id = returnedObject._id
+        delete returnedObject._id
+    }
+})
 
    
 
