@@ -1,8 +1,8 @@
 const { Schema, model } = require('mongoose')
 
-const userSchema = new Schema(
+const ownerSchema = new Schema(
   {
-    userName: String,
+    ownerName: String,
     email: String,
     isActive: Boolean
   },
@@ -12,13 +12,13 @@ const userSchema = new Schema(
   }
 )
 
-userSchema.set('toJSON', {
+ownerSchema.set('toJSON', {
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id
     delete returnedObject._id
   }
 })
 
-const User = model('User', userSchema)
+const Owner = model('Owner', ownerSchema)
 
-module.exports = User
+module.exports = Owner
