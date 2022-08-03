@@ -47,4 +47,17 @@ async function deleteField(fieldId) {
   }
 }
 
-module.exports = { deleteField, registerField, getFieldById, getAllFields }
+async function getTypeFieldsFilter(typeField)
+{
+  try
+  {
+    const result = await PadelField.find({isActive: true, type: typeField});
+    return result;
+  }
+  catch(e)
+  {
+    return e;
+  }
+}
+
+module.exports = { deleteField, registerField, getFieldById, getAllFields, getTypeFieldsFilter }
