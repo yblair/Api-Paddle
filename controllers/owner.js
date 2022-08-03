@@ -1,4 +1,4 @@
-const Owner = require('../schema/owner')
+const Owner = require('../models/Owner')
 
 async function getAllOwners() {
   try {
@@ -18,14 +18,17 @@ async function getOwnerById(ownerId) {
   }
 }
 
-async function createOwner(ownerName) {
+async function createOwner(name, contact, email, username, password) {
   try {
-    const newUser = await Owner.create({
-      ownerName,
-      email: `${ownerName}@test.io`,
+    const newOwner = await Owner.create({
+      name,
+      contact,
+      email,
+      username,
+      password,
       isActive: true
     })
-    return newUser
+    return newOwner
   } catch (e) {
     return e
   }

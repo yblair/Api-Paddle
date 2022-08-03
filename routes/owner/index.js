@@ -23,9 +23,15 @@ module.exports = async function (fastify, opts) {
   })
 
   fastify.post('/', async function (request, reply) {
-    const { ownerName } = request.body
+    const { name, contact, email, username, password } = request.body
     try {
-      const newOwner = await createOwner(ownerName)
+      const newOwner = await createOwner(
+        name,
+        contact,
+        email,
+        username,
+        password
+      )
       return reply.send(newOwner)
     } catch (e) {
       return e

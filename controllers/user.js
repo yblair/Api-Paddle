@@ -1,4 +1,4 @@
-const User = require('../schema/user')
+const User = require('../models/User')
 
 async function getAllUsers() {
   try {
@@ -19,11 +19,15 @@ async function getUserById(userId) {
   }
 }
 
-async function createUser(userName) {
+async function createUser(name, lastName, username, password, contact, email) {
   try {
     const newUser = await User.create({
-      userName,
-      email: `${userName}@test.io`,
+      name,
+      contact,
+      email,
+      username,
+      password,
+      lastName,
       isActive: true
     })
     return newUser
