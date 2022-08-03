@@ -33,7 +33,20 @@ const ownerSchema =  new Schema({
         type: ObjectId,
         ref: "padelFields",
         require: true
-    }]
-})
+    }],
+    isActive: Boolean
+},
+{
+    timestamps: true,
+    versionKey: false
+}
+)
+
+ownerSchema.set('toJSON', {
+    transform: (document, returnedObject) => {
+      returnedObject.id = returnedObject._id
+      delete returnedObject._id
+    }
+  })
 
 module.exports =  mongoose.model('owner', ownerSchema)
