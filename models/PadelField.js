@@ -22,7 +22,7 @@ const padelFieldsSchema =  new Schema({
     },
     availability:{
         type: Boolean,
-        default: true
+        // default: true
     },
     type: {
         type:String,

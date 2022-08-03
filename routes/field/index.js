@@ -6,6 +6,7 @@ const {
   getAllFields,
   getTypeFieldsFilter
 } = require('../../controllers/field')
+const PadelField = require('../../models/PadelField')
 
 module.exports = async function (fastify, opts) {
   fastify.get('/', async function (_, reply) {
@@ -38,7 +39,7 @@ module.exports = async function (fastify, opts) {
   })
 
   fastify.post('/', async function (request, reply) {
-    const { name, location, image, type, price, owner } = request.body
+    const { name, location, image, type, price, owner,availability } = request.body
     try {
       const newFiled = await registerField(
         name,
@@ -46,7 +47,8 @@ module.exports = async function (fastify, opts) {
         image,
         type,
         price,
-        owner
+        owner,
+        availability
       )
       return reply.send(newFiled)
     } catch (e) {
@@ -60,6 +62,35 @@ module.exports = async function (fastify, opts) {
       const deletecField = await deleteField(fieldId)
       return reply.send(deletecField)
     } catch (e) {
+      return e
+    }
+  })
+
+  fastify.get('/sort', async function (request, reply) {
+    try {
+      const result = await PadelField.find({ isActive: true }).sort({ price: -1 })
+      return reply.send(result)
+    } catch (e) {
+      return e
+    }
+  })
+
+  fastify.get('/able', async function(request, reply) {
+    try{
+      const result = await PadelField.find({ isActive: true, availability: false })
+      return reply.send(result)
+    }catch(e){
+      return e
+    }
+  })
+
+  fastify.get('/search', async function(request, reply) {
+    try{
+      const { name } = request.query
+      const result = await PadelField.find({ isActive: true, name: { $regex: name, $options: 'i' } })
+      console.log(result)
+      return reply.send(result)
+    }catch(e){
       return e
     }
   })
