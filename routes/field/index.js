@@ -3,13 +3,28 @@ const {
   deleteField,
   registerField,
   getFieldById,
-  getAllFields
+  getAllFields,
+  getTypeFieldsFilter
 } = require('../../controllers/field')
 
 module.exports = async function (fastify, opts) {
   fastify.get('/', async function (_, reply) {
     const fields = await getAllFields()
     return reply.send(fields)
+  })
+
+  fastify.get('/typeField', async function (request, reply)
+  {
+    try
+    {
+      const { typeField } = request.query;
+      const typeFields = await getTypeFieldsFilter(typeField);
+      return reply.send(typeFields);
+    }
+    catch(e)
+    {
+      return e;
+    }
   })
 
   fastify.get('/:filedId', async function (request, reply) {
