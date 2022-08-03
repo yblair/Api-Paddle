@@ -6,7 +6,11 @@ const padelFieldsSchema =  new Schema({
         type: String,
         require:true,
         trim: true
-
+    },
+    name: {
+        type: String,
+        require:true,
+        trim: true
     },
     owner: {
         type: String,
