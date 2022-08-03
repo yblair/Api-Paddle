@@ -18,7 +18,7 @@ async function getFieldById(ownerId) {
   }
 }
 
-async function registerField(name, location, image, type, price, owner) {
+async function registerField(name, location, image, type, price, owner, availability) {
   try {
     const newField = await PadelField.create({
       name,
@@ -28,7 +28,7 @@ async function registerField(name, location, image, type, price, owner) {
       price,
       owner,
       isActive: true,
-      availability: true
+      availability
     })
     return newField
   } catch (e) {
