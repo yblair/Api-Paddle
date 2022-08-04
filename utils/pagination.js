@@ -4,19 +4,11 @@ module.exports = {
     const endIndex = page * limit
     const results = {}
 
-    if (endIndex < model.length) {
-      results.next = {
-        page: parseInt(page) + 1,
-        limit: parseInt(limit)
-      }
-    }
+    if (endIndex < model.length) results.nextPage = parseInt(page) + 1
 
-    if (startIndex > 0) {
-      results.previus = {
-        page: parseInt(page) - 1,
-        limit: parseInt(limit)
-      }
-    }
+    if (startIndex > 0) results.previusPage = parseInt(page) - 1
+
+    if (!model.lengt) results.count = model.length
 
     results.results = model.slice(startIndex, endIndex)
 

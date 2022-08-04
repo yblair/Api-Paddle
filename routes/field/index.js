@@ -4,17 +4,19 @@ const {
   registerField,
   getFieldById,
   getAllFields,
-  getTypeFieldsFilter
+  getTypeFieldsFilter,
+  filterByAvailability,
+  sortFieldBy,
+  searhcFieldByName
 } = require('../../controllers/field')
 const { pagination } = require('../../utils/pagination')
-const PadelField = require('../../models/PadelField')
+// const PadelField = require('../../models/PadelField')
 
 module.exports = async function (fastify, opts) {
   fastify.get('/', async function (request, reply) {
     try {
       const { page, limit } = request.query
-      const fields = await getAllFields()
-      const result = pagination(fields, page, limit)
+      const result = pagination(getAllFields(), page, limit)
       return reply.send(result)
     } catch (e) {
       return reply.log.error(e)
@@ -68,51 +70,49 @@ module.exports = async function (fastify, opts) {
     }
   })
 
-  fastify.get('/sort', async function (_, reply) {
+  fastify.get('/sort', async function (request, reply) {
     try {
-      const result = await PadelField.find({ isActive: true }).sort({
-        price: -1
-      })
+      const { page, limit } = request.query
+      const result = pagination(sortFieldBy(), page, limit)
       return reply.send(result)
     } catch (e) {
       return e
     }
   })
 
-  fastify.get('/able', async function (_, reply) {
+  fastify.get('/able', async function (request, reply) {
     try {
-      const result = await PadelField.find({
-        isActive: true,
-        availability: true
-      })
+      const { page, limit } = request.query
+      const result = pagination(filterByAvailability(), page, limit)
       return reply.send(result)
     } catch (e) {
-      return e
+      return reply.log.error(e)
     }
   })
 
   fastify.get('/search', async function (request, reply) {
     try {
-      const { name } = request.query
-      const result = await PadelField.find({
-        isActive: true,
-        name: { $regex: name, $options: 'i' }
-      })
-      console.log(result)
+      const { name, page, limit } = request.query
+      const result = pagination(searhcFieldByName(name), page, limit)
       return reply.send(result)
     } catch (e) {
       return e
     }
   })
 
+/*  
+  TODO: necesitamos realizar un metodo para poder alternar entre no/disponible
+        
   fastify.put('/:fieldId', async function (request, reply) {
     const MESSAGE = 'Field availability change'
     try {
       const { fieldId } = request.params
-      await PadelField.findByIdAndUpdate(fieldId, {})
+      await PadelField.findByIdAndUpdate(fieldId, {
+        availability: 
+      })
       return MESSAGE
     } catch (e) {
       return e
     }
-  })
+  }) */
 }

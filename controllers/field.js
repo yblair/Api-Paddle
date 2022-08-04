@@ -64,10 +64,48 @@ async function getTypeFieldsFilter(typeField) {
   }
 }
 
+async function filterByAvailability() {
+  try {
+    const result = await PadelField.find({
+      isActive: true,
+      availability: true
+    })
+    return result
+  } catch (e) {
+    return e
+  }
+}
+
+async function sortFieldBy() {
+  try {
+    const result = await PadelField.find({ isActive: true }).sort({
+      price: -1
+    })
+    return result
+  } catch (e) {
+    return e
+  }
+}
+
+async function searhcFieldByName(name) {
+  try {
+    const result = await PadelField.find({
+      isActive: true,
+      name: { $regex: name, $options: 'i' }
+    })
+    return result
+  } catch (e) {
+    return e
+  }
+}
+
 module.exports = {
   deleteField,
   registerField,
   getFieldById,
   getAllFields,
-  getTypeFieldsFilter
+  getTypeFieldsFilter,
+  filterByAvailability,
+  sortFieldBy,
+  searhcFieldByName
 }
