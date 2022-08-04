@@ -72,6 +72,7 @@ module.exports = async function (fastify, opts) {
     }
   })
 
+
   fastify.get('/able', async function (_, reply) {
     try {
       const result = await PadelField.find({
