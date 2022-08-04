@@ -6,12 +6,19 @@ const {
   getAllFields,
   getTypeFieldsFilter
 } = require('../../controllers/field')
+const { pagination } = require('../../utils/pagination')
 const PadelField = require('../../models/PadelField')
 
 module.exports = async function (fastify, opts) {
-  fastify.get('/', async function (_, reply) {
-    const fields = await getAllFields()
-    return reply.send(fields)
+  fastify.get('/', async function (request, reply) {
+    try {
+      const { page, limit } = request.query
+      const fields = await getAllFields()
+      const result = pagination(fields, page, limit)
+      return reply.send(result)
+    } catch (e) {
+      return reply.log.error(e)
+    }
   })
 
   fastify.get('/typeField', async function (request, reply) {
@@ -102,9 +109,7 @@ module.exports = async function (fastify, opts) {
     const MESSAGE = 'Field availability change'
     try {
       const { fieldId } = request.params
-      await PadelField.findByIdAndUpdate(fieldId, {
-        
-      })
+      await PadelField.findByIdAndUpdate(fieldId, {})
       return MESSAGE
     } catch (e) {
       return e

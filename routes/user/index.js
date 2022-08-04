@@ -5,11 +5,18 @@ const {
   createUser,
   deleteUserById
 } = require('../../controllers/user')
+const { pagination } = require('../../utils/pagination')
 
 module.exports = async function (fastify, opts) {
-  fastify.get('/', async function (_, reply) {
-    const users = await getAllUsers()
-    return reply.send(users)
+  fastify.get('/', async function (request, reply) {
+    try {
+      const { page, limit } = request.query
+      const users = await getAllUsers()
+      const result = pagination(users, page, limit)
+      return reply.send(result)
+    } catch (e) {
+      return reply.log.error(e)
+    }
   })
 
   fastify.get('/:userId', async function (request, reply) {
@@ -23,14 +30,14 @@ module.exports = async function (fastify, opts) {
   })
 
   fastify.post('/', async function (request, reply) {
-    const { username, name, contact, email, lastName, password } = request.body
+    const { username, name, lastName, contact, email, password } = request.body
     try {
       const newUser = await createUser(
         username,
         name,
+        lastName,
         contact,
         email,
-        lastName,
         password
       )
       return reply.send(newUser)

@@ -19,15 +19,15 @@ async function getUserById(userId) {
   }
 }
 
-async function createUser(name, lastName, username, password, contact, email) {
+async function createUser(username, name, lastName, contact, email, password) {
   try {
     const newUser = await User.create({
+      username,
       name,
+      lastName,
       contact,
       email,
-      username,
       password,
-      lastName,
       isActive: true
     })
     return newUser
