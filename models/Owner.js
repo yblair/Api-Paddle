@@ -1,52 +1,50 @@
-const mongoose = require('mongoose')
-const {ObjectId} = mongoose.Schema;
-const Schema = mongoose.Schema;
-const ownerSchema =  new Schema({
+const { Schema, model } = require('mongoose')
+
+const ownerSchema = new Schema(
+  {
     name: {
-        type: String,
-        require:true,
-        trim: true
+      type: String,
+      require: true,
+      trim: true
     },
     email: {
-        type: String,
-        trim: true,
-        unique: true,
-        require: true,
-        lowercase:true
+      type: String,
+      trim: true,
+      unique: true,
+      require: true,
+      lowercase: true
     },
     contact: {
-        type: Number,
-        unique: true,
-        require: true
+      type: Number,
+      unique: true,
+      require: true
     },
-    password:{
-        type: String,
-        require:true,
-        trim:true
+    password: {
+      type: String,
+      require: true,
+      trim: true
     },
     username: {
-        type: String,
-        require:true,
-        trim: true
+      type: String,
+      require: true,
+      trim: true
     },
-    padelFields:[{
-        type: ObjectId,
-        ref: "padelFields",
-        require: true
-    }],
+    padelFields: [],
     isActive: Boolean
-},
-{
+  },
+  {
     timestamps: true,
     versionKey: false
-}
+  }
 )
 
 ownerSchema.set('toJSON', {
-    transform: (document, returnedObject) => {
-      returnedObject.id = returnedObject._id
-      delete returnedObject._id
-    }
-  })
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id
+    delete returnedObject._id
+  }
+})
 
-module.exports =  mongoose.model('owner', ownerSchema)
+const Owner = model('owner', ownerSchema)
+
+module.exports = Owner
