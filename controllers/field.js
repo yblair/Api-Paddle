@@ -1,4 +1,5 @@
 const PadelField = require('../models/PadelField')
+const Owner = require('../models/Owner')
 
 async function getAllFields() {
   try {
@@ -18,7 +19,7 @@ async function getFieldById(ownerId) {
   }
 }
 
-async function registerField(name, location, image, type, price, owner, availability) {
+async function registerField(name, location, image, type, price, ownerId) {
   try {
     const newField = await PadelField.create({
       name,
@@ -26,11 +27,18 @@ async function registerField(name, location, image, type, price, owner, availabi
       image,
       type,
       price,
-      owner,
+      owner: ownerId,
       isActive: true,
-      availability
+      availability: true
     })
-    return newField
+    await Owner.findByIdAndUpdate(ownerId, {
+      $push: {
+        padelFields: {
+          _id: newField._id
+        }
+      }
+    })
+    return newField.save()
   } catch (e) {
     return e
   }
@@ -47,17 +55,19 @@ async function deleteField(fieldId) {
   }
 }
 
-async function getTypeFieldsFilter(typeField)
-{
-  try
-  {
-    const result = await PadelField.find({isActive: true, type: typeField});
-    return result;
-  }
-  catch(e)
-  {
-    return e;
+async function getTypeFieldsFilter(typeField) {
+  try {
+    const result = await PadelField.find({ isActive: true, type: typeField })
+    return result
+  } catch (e) {
+    return e
   }
 }
 
-module.exports = { deleteField, registerField, getFieldById, getAllFields, getTypeFieldsFilter }
+module.exports = {
+  deleteField,
+  registerField,
+  getFieldById,
+  getAllFields,
+  getTypeFieldsFilter
+}
