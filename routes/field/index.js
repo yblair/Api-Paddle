@@ -70,7 +70,7 @@ module.exports = async function (fastify, opts) {
     }
   })
 
-  fastify.get('/sort', async function (request, reply) {
+fastify.get('/sort', async function (request, reply) {
     try {
       const { page, limit } = request.query
       const result = pagination(sortFieldBy(), page, limit)
@@ -79,7 +79,7 @@ module.exports = async function (fastify, opts) {
       return e
     }
   })
-
+  
   fastify.get('/able', async function (request, reply) {
     try {
       const { page, limit } = request.query
