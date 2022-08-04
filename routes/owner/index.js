@@ -5,11 +5,18 @@ const {
   createOwner,
   deleteOwnerById
 } = require('../../controllers/owner')
+const { pagination } = require('../../utils/pagination')
 
 module.exports = async function (fastify, opts) {
-  fastify.get('/', async function (_, reply) {
-    const owners = await getAllOwners()
-    return reply.send(owners)
+  fastify.get('/', async function (request, reply) {
+    try {
+      const { page, limit } = request.query
+      const owners = await getAllOwners()
+      const result = pagination(owners, page, limit)
+      return reply.send(result)
+    } catch (e) {
+      return reply.lo.error(e)
+    }
   })
 
   fastify.get('/:ownerId', async function (request, reply) {
