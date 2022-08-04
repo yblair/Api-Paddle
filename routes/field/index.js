@@ -61,11 +61,10 @@ module.exports = async function (fastify, opts) {
     }
   })
 
-  fastify.get('/sort', async function (_, reply) {
+  fastify.get('/price', async function (request, reply) {
     try {
-      const result = await PadelField.find({ isActive: true }).sort({
-        price: -1
-      })
+      const {sort} = request.query
+      const result = await PadelField.find({ isActive: true }).sort({ price: sort })
       return reply.send(result)
     } catch (e) {
       return e
@@ -73,11 +72,12 @@ module.exports = async function (fastify, opts) {
   })
 
 
-  fastify.get('/able', async function (_, reply) {
+  fastify.get('/able', async function (request, reply) {
     try {
+      const {active} = request.query
       const result = await PadelField.find({
         isActive: true,
-        availability: true
+        availability: active
       })
       return reply.send(result)
     } catch (e) {
