@@ -2,14 +2,10 @@
 
 const fp = require('fastify-plugin')
 
-
-/**
- * This plugins adds some utilities to handle http errors
- *
- * @see https://github.com/fastify/fastify-sensible
- */
 module.exports = fp(async function (fastify, opts) {
-  fastify.register(require('@fastify/cors'),{ 
-    origin: '127.0.0.1:3000'
+  fastify.register(require('@fastify/cors'), {
+    origin: '*',
+    allowedHeaders: ['Origin', 'X-Requested-With', 'Accept', 'Content-Type'],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
   })
 })
