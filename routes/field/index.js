@@ -16,7 +16,8 @@ module.exports = async function (fastify, opts) {
   fastify.get('/', async function (request, reply) {
     try {
       const { page, limit } = request.query
-      const result = pagination(getAllFields(), page, limit)
+      const fields = await getAllFields()
+      const result = pagination(fields, page, limit)
       return reply.send(result)
     } catch (e) {
       return reply.log.error(e)
@@ -70,7 +71,7 @@ module.exports = async function (fastify, opts) {
     }
   })
 
-fastify.get('/sort', async function (request, reply) {
+  fastify.get('/sort', async function (request, reply) {
     try {
       const { page, limit } = request.query
       const result = pagination(sortFieldBy(), page, limit)
@@ -79,7 +80,7 @@ fastify.get('/sort', async function (request, reply) {
       return e
     }
   })
-  
+
   fastify.get('/able', async function (request, reply) {
     try {
       const { page, limit } = request.query
@@ -100,7 +101,7 @@ fastify.get('/sort', async function (request, reply) {
     }
   })
 
-/*  
+  /*  
   TODO: necesitamos realizar un metodo para poder alternar entre no/disponible
         
   fastify.put('/:fieldId', async function (request, reply) {
