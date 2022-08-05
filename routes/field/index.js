@@ -26,9 +26,10 @@ module.exports = async function (fastify, opts) {
 
   fastify.get('/typeField', async function (request, reply) {
     try {
-      const { typeField } = request.query
-      const typeFields = await getTypeFieldsFilter(typeField)
-      return reply.send(typeFields)
+      const { typeField, page, limit } = request.query
+      const bytype = await getTypeFieldsFilter(typeField)
+      const result = pagination(bytype, page, limit)
+      return reply.send(result)
     } catch (e) {
       return e
     }
