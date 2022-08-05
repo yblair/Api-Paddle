@@ -64,11 +64,11 @@ async function getTypeFieldsFilter(typeField) {
   }
 }
 
-async function filterByAvailability() {
+async function filterByAvailability(active) {
   try {
     const result = await PadelField.find({
       isActive: true,
-      availability: true
+      availability: active
     })
     return result
   } catch (e) {
@@ -76,10 +76,10 @@ async function filterByAvailability() {
   }
 }
 
-async function sortFieldBy() {
+async function sortFieldBy(sort) {
   try {
     const result = await PadelField.find({ isActive: true }).sort({
-      price: -1
+      price: sort
     })
     return result
   } catch (e) {

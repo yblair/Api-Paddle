@@ -73,8 +73,9 @@ module.exports = async function (fastify, opts) {
 
   fastify.get('/sort', async function (request, reply) {
     try {
-      const { page, limit } = request.query
-      const result = pagination(sortFieldBy(), page, limit)
+      const {price, page, limit } = request.query
+      const byprice = await sortFieldBy(price)
+      const result = pagination(byprice, page, limit)
       return reply.send(result)
     } catch (e) {
       return e
@@ -83,8 +84,9 @@ module.exports = async function (fastify, opts) {
 
   fastify.get('/able', async function (request, reply) {
     try {
-      const { page, limit } = request.query
-      const result = pagination(filterByAvailability(), page, limit)
+      const {active, page, limit } = request.query
+      const able = await filterByAvailability(active)
+      const result = pagination(able, page, limit)
       return reply.send(result)
     } catch (e) {
       return reply.log.error(e)
@@ -94,7 +96,8 @@ module.exports = async function (fastify, opts) {
   fastify.get('/search', async function (request, reply) {
     try {
       const { name, page, limit } = request.query
-      const result = pagination(searhcFieldByName(name), page, limit)
+      const search = await searhcFieldByName(name);
+      const result = pagination(search, page, limit)
       return reply.send(result)
     } catch (e) {
       return e
