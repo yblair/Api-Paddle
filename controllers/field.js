@@ -99,6 +99,28 @@ async function searhcFieldByName(name) {
   }
 }
 
+async function getPriceByRange(minPrice, maxPrice)
+{
+  try
+  {
+    const result = await PadelField.find(
+      {
+        isActive: true,
+        price:
+        {
+          $gte: minPrice,
+          $lte: maxPrice
+        }
+      });
+
+    return result;
+  }
+  catch(e)
+  {
+    return e;
+  }
+}
+
 module.exports = {
   deleteField,
   registerField,
@@ -107,5 +129,6 @@ module.exports = {
   getTypeFieldsFilter,
   filterByAvailability,
   sortFieldBy,
-  searhcFieldByName
+  searhcFieldByName,
+  getPriceByRange
 }

@@ -7,7 +7,8 @@ const {
   getTypeFieldsFilter,
   filterByAvailability,
   sortFieldBy,
-  searhcFieldByName
+  searhcFieldByName,
+  getPriceByRange
 } = require('../../controllers/field')
 const { pagination } = require('../../utils/pagination')
 // const PadelField = require('../../models/PadelField')
@@ -32,6 +33,21 @@ module.exports = async function (fastify, opts) {
       return reply.send(result)
     } catch (e) {
       return e
+    }
+  })
+
+  fastify.get('/rangePrice', async function (request, reply)
+  {
+    try
+    {
+      const {minPrice, maxPrice, page, limit} = request.query;
+      const applyFilter = await getPriceByRange(minPrice, maxPrice);
+      const result = pagination(applyFilter, page, limit)
+      return reply.send(result);
+    }
+    catch(e)
+    {
+      return e;
     }
   })
 
