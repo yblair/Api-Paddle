@@ -40,7 +40,10 @@ module.exports = async function (fastify, opts) {
         email,
         password
       )
-      return reply.send(newUser)
+
+      const token = fastify.jwt.sign({ newUser })
+
+      return reply.send({newUser, token})
     } catch (e) {
       return e
     }
