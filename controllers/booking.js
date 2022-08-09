@@ -70,8 +70,7 @@ async function getHours(idField, day)
                                 $dateToString:
                                 {
                                     format: "%d/%m/%Y",
-                                    date: "$date",
-                                    // timezone: "UTC-3"
+                                    date: "$date"
                                 }
                             },
                             hour:
@@ -80,7 +79,7 @@ async function getHours(idField, day)
                                 {
                                     format: "%H",
                                     date: "$date",
-                                    timezone: "-03:00"
+                                    timezone: "-00:00"
                                 }
                             }
                         }
