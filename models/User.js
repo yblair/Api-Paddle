@@ -35,6 +35,10 @@ const userSchema = new Schema(
       require: true,
       trim: true
     },
+    role:{
+      type: String,
+      default: 'user'
+    },
     score: {
       type: Number
     },

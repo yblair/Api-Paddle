@@ -6,6 +6,7 @@ const {
   deleteOwnerById
 } = require('../../controllers/owner')
 const { pagination } = require('../../utils/pagination')
+const owner = require('../../models/Owner')
 
 module.exports = async function (fastify, opts) {
   fastify.get('/', async function (request, reply) {
@@ -39,9 +40,35 @@ module.exports = async function (fastify, opts) {
         username,
         password
       )
-      return reply.send(newOwner)
+      const token = fastify.jwt.sign({ newOwner })
+      return reply.send({newOwner, token})
+      
     } catch (e) {
       return e
+    }
+  })
+
+  fastify.post('/login', function(request, reply){
+    const{ email, password} = request.body
+    try{
+      owner.findOne({email})
+      .then(owner => {
+        if (!owner) return reply.status(400).send({ msg: "Owner not exist" })
+        bcrypt.compare(password, owner.password, (err, data) => {
+            if (err) throw err
+            if (data) {
+              const ownerId = data.id;
+              const accessToken = fastify.jwt.sign({ ownerId })
+              return reply.status(200).send({ msg: "Login success", accessToken })
+            } else {
+              return reply.status(401).send({ msg: "Invalid credencial" })
+            }
+        })
+    })
+  
+      } 
+    catch(err){
+      reply.send(err, "este errawr")
     }
   })
 
