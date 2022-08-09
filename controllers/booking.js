@@ -1,7 +1,6 @@
 const Booking = require('../models/booking');
 
 const horarios = [9,10,11,12,13,14,15,16,17,18];
-// comentario
 
 async function getBookingsFields(idField)
 {
@@ -61,35 +60,42 @@ async function getHours(idField, day)
 {
     try
     {
-        const bookings = await Booking.find(
-            {
-                isActive: true,
-                idField
-            })
+        const bookings = await Booking.aggregate(
+                [
+                    {
+                        $project:
+                        {
+                            day:
+                            {
+                                $dateToString:
+                                {
+                                    format: "%d/%m/%Y",
+                                    date: "$date",
+                                    // timezone: "UTC-3"
+                                }
+                            },
+                            hour:
+                            {
+                                $dateToString:
+                                {
+                                    format: "%H",
+                                    date: "$date",
+                                    timezone: "-03:00"
+                                }
+                            }
+                        }
+                    }
+                ])
 
-        const arr = bookings.map(el =>
-            {
-                return {
-                    idField: el.idField,
-                    day: el.date.toString().slice(4,15),
-                    hour: el.date.toString().slice(16,18)
-                }
-            });
+        const dayBooking = bookings.filter(d => d.day === day);
 
-        const filter = arr.map(el =>
-            {
-                if(el.day === day)
-                    return Number(el.hour);
-                return null;
-            });
-
-        const filter2 = filter.filter(el => el !== null);
+        const hourBooking = dayBooking.map(d => Number(d.hour));
 
         const horarioFinal = [];
 
         for(let i = 0;i<horarios.length; i++)
         {
-            if(!filter2.includes(horarios[i])) horarioFinal.push(horarios[i]);
+            if(!hourBooking.includes(horarios[i])) horarioFinal.push(horarios[i]);
         }
 
         return horarioFinal;

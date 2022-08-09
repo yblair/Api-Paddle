@@ -1,6 +1,6 @@
 const { Schema, model } = require('mongoose')
 
-const ownerSchema = new Schema(
+const bookingSchema = new Schema(
     {
         idUser:
         {
@@ -24,7 +24,7 @@ const ownerSchema = new Schema(
         versionKey: false
     });
 
-ownerSchema.set('toJSON', {
+bookingSchema.set('toJSON', {
         transform: (document, returnedObject) =>
         {
           returnedObject.id = returnedObject._id
@@ -32,6 +32,6 @@ ownerSchema.set('toJSON', {
         }
       });
 
-const Booking = model('booking', ownerSchema)
+const Booking = model('booking', bookingSchema)
 
 module.exports = Booking
