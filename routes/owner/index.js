@@ -6,6 +6,8 @@ const {
   deleteOwnerById
 } = require('../../controllers/owner')
 const { pagination } = require('../../utils/pagination')
+const bcrypt = require("bcrypt")
+require('dotenv')
 const owner = require('../../models/Owner')
 
 module.exports = async function (fastify, opts) {
