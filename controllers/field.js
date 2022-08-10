@@ -121,10 +121,10 @@ async function getPriceByRange(minPrice, maxPrice)
   }
 }
 
-async function updateField(fieldId, price, availability, image, name, location, type) {
+async function updateField(fieldId, price, availability, image, name, location, type, horario) {
   try{
     
-      const updateField = await PadelField.findByIdAndUpdate(fieldId, {price, availability, image, name, location, type} , {new:true})
+      const updateField = await PadelField.findByIdAndUpdate(fieldId, {price, availability, image, name, location, type, horario} , {new:true})
       return updateField;
   }catch(e){
     return e

@@ -34,6 +34,8 @@ const padelFieldsSchema = new Schema(
       type: Number,
       require: true
     },
+    horario: [],
+    reviews: [],
     isActive: Boolean
   },
   {

@@ -125,9 +125,9 @@ module.exports = async function (fastify, opts) {
 
   fastify.put('/:fieldId', async function (request, reply) {
     const { fieldId } = request.params
-    const { price, availability, image, name, location, type } = request.body;
+    const { price, availability, image, name, location, type, horario } = request.body;
    try {
-    const updateResult = await updateField(fieldId, price, availability, image, name, location, type)
+    const updateResult = await updateField(fieldId, price, availability, image, name, location, type, horario)
     return reply.send(updateResult)
    
    } catch (e) {
