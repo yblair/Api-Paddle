@@ -3,7 +3,8 @@ const {
   getAllOwners,
   getOwnerById,
   createOwner,
-  deleteOwnerById
+  deleteOwnerById,
+  updatedOwner
 } = require('../../controllers/owner')
 const { pagination } = require('../../utils/pagination')
 const bcrypt = require("bcrypt")
@@ -82,5 +83,17 @@ module.exports = async function (fastify, opts) {
     } catch (e) {
       return e
     }
+  })
+
+  fastify.put('/:ownerId', async function (request, reply) {
+    const { ownerId } = request.params
+    const { password, username, contact } = request.body;
+   try {
+    const updateResult = await updatedOwner(ownerId, password, username, contact)
+    return reply.send(updateResult)
+   
+   } catch (e) {
+     return e
+   }
   })
 }
