@@ -3,7 +3,8 @@ const {
   getAllUsers,
   getUserById,
   createUser,
-  deleteUserById
+  deleteUserById,
+  updateUser
 } = require('../../controllers/user')
 const { pagination } = require('../../utils/pagination')
 const bcrypt = require("bcrypt")
@@ -127,4 +128,16 @@ module.exports = async function (fastify, opts) {
       return e
     }
   })
+
+  fastify.put('/:userId', async function (request, reply) {
+    const { userId } = request.params
+    const { password, contact, username } = request.body;
+   try {
+    const updateResult = await updateUser(userId, password, username, contact)
+    return reply.send(updateResult)
+   
+   } catch (e) {
+     return e
+   }
+ })
 }

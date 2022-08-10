@@ -1,4 +1,5 @@
 const Owner = require('../models/Owner')
+const bcrypt = require('bcrypt')
 
 async function getAllOwners() {
   try {
@@ -45,4 +46,17 @@ async function deleteOwnerById(ownerId) {
   }
 }
 
-module.exports = { getOwnerById, getAllOwners, createOwner, deleteOwnerById }
+async function updatedOwner(ownerId, password, username, contact){
+  try{
+    if(password !== undefined){
+      const salt = await bcrypt.genSalt(10)
+      const hash = await bcrypt.hash(password, salt)
+      const updatedOwner = await Owner.findByIdAndUpdate(ownerId, {password: hash, contact, username}, {new: true})
+      return updatedOwner
+    }
+  }catch(e){
+    return e
+  }
+}
+
+module.exports = { getOwnerById, getAllOwners, createOwner, deleteOwnerById, updatedOwner }

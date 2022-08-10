@@ -121,6 +121,16 @@ async function getPriceByRange(minPrice, maxPrice)
   }
 }
 
+async function updateField(fieldId, price, availability, image, name, location, type) {
+  try{
+    
+      const updateField = await PadelField.findByIdAndUpdate(fieldId, {price, availability, image, name, location, type} , {new:true})
+      return updateField;
+  }catch(e){
+    return e
+  }
+}
+
 module.exports = {
   deleteField,
   registerField,
@@ -130,5 +140,6 @@ module.exports = {
   filterByAvailability,
   sortFieldBy,
   searhcFieldByName,
-  getPriceByRange
+  getPriceByRange,
+  updateField
 }

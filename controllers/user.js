@@ -1,4 +1,5 @@
 const User = require('../models/User')
+const bcrypt = require('bcrypt')
 
 async function getAllUsers() {
   try {
@@ -47,4 +48,17 @@ async function deleteUserById(userId) {
   }
 }
 
-module.exports = { getUserById, getAllUsers, createUser, deleteUserById }
+async function updateUser(userId, password, username, contact ){
+  try{
+    if(password !== undefined){
+      const salt = await bcrypt.genSalt(10)
+      const hash = await bcrypt.hash(password, salt)
+      const updatedUser = await User.findByIdAndUpdate(userId, {password: hash, contact, username}, {new: true})
+      return updatedUser
+    }
+  }catch(e){
+    return e
+  }
+}
+
+module.exports = { getUserById, getAllUsers, createUser, deleteUserById, updateUser }
