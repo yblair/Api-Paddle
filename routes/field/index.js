@@ -9,7 +9,9 @@ const {
   sortFieldBy,
   searhcFieldByName,
   getPriceByRange,
-  updateField
+  updateField,
+  registerReviews,
+  getReviews
 } = require('../../controllers/field')
 const { pagination } = require('../../utils/pagination')
 // const PadelField = require('../../models/PadelField')
@@ -134,6 +136,27 @@ module.exports = async function (fastify, opts) {
      return e
    }
  })
+
+ fastify.post('/reviews', async function(request, reply) {
+  // const {fieldId} = request.params
+  try {
+      const { fieldId, rating, review } = request.body
+       
+      const newReviews = await registerReviews( fieldId, rating, review )
+      return reply.send(newReviews)
+  }catch(e) {
+      return e
+  }
+})
+
+fastify.get('/reviews', async function(request, reply) {
+  try {
+      const reviews = await getReviews()
+      return reply.send(reviews)
+  }catch(e) {
+      return e
+  }
+});
 
   /*  
   TODO: necesitamos realizar un metodo para poder alternar entre no/disponible

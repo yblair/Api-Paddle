@@ -1,17 +1,18 @@
 const { Schema, model } = require('mongoose')
+// const mongoose = require('mongoose')
 
 const reviewsSchema = new Schema(
   {
-    raiting: {
+    rating: {
       type: Number,
-      require: true,
+      min: 1,
+      max: 5
     },
-    comment: {
-      type: String,
-      trim: true,
+    review: {       
+      type: String   
     },
-    padelField: [],
-    user: [],
+   
+    isActive: Boolean
   },
   {
     timestamps: true,
@@ -26,9 +27,17 @@ reviewsSchema.set('toJSON', {
   }
 })
 
+// reviewsSchema.pre(/^find/, function (next) {
+//   const query = [
+//     // { path: 'tour', select: 'username' },
+//     { path: 'user', select: 'username' },
+//   ];
+//   this.populate(query);
+//   next();
+// });
 
 
 
-const Reviews = model('reviews', reviewsSchema)
+const Reviews = model('Reviews', reviewsSchema)
 
 module.exports = Reviews

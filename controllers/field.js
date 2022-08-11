@@ -1,5 +1,6 @@
 const PadelField = require('../models/PadelField')
 const Owner = require('../models/Owner')
+const Reviews = require('../models/Reviews')
 
 async function getAllFields() {
   try {
@@ -131,6 +132,37 @@ async function updateField(fieldId, price, availability, image, name, location, 
   }
 }
 
+async function registerReviews( fielId, rating, review) {
+  try {
+      // const search = await PadelField.findById(fielId);
+     const newReviews = await Reviews.create({
+          rating,
+          review,
+          isActive: true,
+     })
+      await PadelField.findByIdAndUpdate(fielId, {
+          $push: {
+              review: {
+                  _id: newReviews._id
+              }
+          }
+      })
+      return newReviews.save()
+  }catch(e) {
+      return e
+  }
+  
+}
+
+async function getReviews() {
+  try {
+      const reviews = await Reviews.find({isActive: true});
+      return reviews;
+  }catch(e) {
+      return e
+  }
+}
+
 module.exports = {
   deleteField,
   registerField,
@@ -141,5 +173,7 @@ module.exports = {
   sortFieldBy,
   searhcFieldByName,
   getPriceByRange,
-  updateField
+  updateField,
+  registerReviews,
+  getReviews
 }
