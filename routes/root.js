@@ -1,7 +1,19 @@
 'use strict'
 
-module.exports = async function (fastify, opts) {
-  fastify.get('/', async function (_, reply) {
-    return reply.send({ root: 'true' })
-  })
-}
+const { Router } = require('express');
+// Importar todos los routers;
+const field = require("./field/index");
+const owner = require("./owner/index");
+const user = require("./user/index");
+const booking = require("./booking/index");
+
+const router = Router();
+
+// Configurar los routers
+router.use('/field', field);
+router.use('/owner', owner);
+router.use('/user', user);
+router.use('/booking', booking);
+
+
+module.exports = router;

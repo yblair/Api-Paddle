@@ -1,4 +1,6 @@
 'use strict'
+const { Router } = require('express'); 
+const router = Router();
 const {
   getAllUsers,
   getUserById,
@@ -6,12 +8,13 @@ const {
   deleteUserById
 } = require('../../controllers/user')
 const { pagination } = require('../../utils/pagination')
-const bcrypt = require("bcrypt")
 require('dotenv')
 const user = require('../../models/User')
+const {tokenGenerator} = require("../../controllers/tokenGenerator")
+const jwtCheck = require("../../middleware/middleware")
+const bcrypt = require("bcrypt")
 
-module.exports = async function (fastify, opts) {
-  fastify.get('/', async function (request, reply) {
+  router.get('/', async function (request, reply) {
     try {
       const { page, limit } = request.query
       const users = await getAllUsers()
@@ -22,7 +25,16 @@ module.exports = async function (fastify, opts) {
     }
   })
 
-  fastify.get('/:userId', async function (request, reply) {
+  router.get('/info', jwtCheck, async (request, reply) => {
+    try{
+      reply.status(200).send("SUCCESSFULLY CONNECTED")
+      } 
+    catch(err){
+      reply.send({msg: "Unathorized"})
+    }
+  })
+
+  router.get('/:userId', async function (request, reply) {
     const { userId } = request.params
     try {
       const user = await getUserById(userId)
@@ -32,7 +44,7 @@ module.exports = async function (fastify, opts) {
     }
   })
 
-  fastify.post('/', async function (request, reply) {
+  router.post('/', async function (request, reply) {
     const { username, name, lastName, contact, email, password } = request.body
     try {
       const newUser = await createUser(
@@ -43,8 +55,7 @@ module.exports = async function (fastify, opts) {
         email,
         password
       )
-
-      const token = fastify.jwt.sign({ newUser })
+       const token = tokenGenerator({newUser})
 
       return reply.send({newUser, token})
     } catch (e) {
@@ -52,9 +63,9 @@ module.exports = async function (fastify, opts) {
     }
   })
 
-
-  fastify.post('/login', function(request, reply){
-    const{ email, password} = request.body
+  router.post("/login", async (request, reply) => {
+    const{ email, password } = request.body;
+    if(!email || !password) return reply.status(400).json({msg: "email and password are required"})
     try{
       user.findOne({email})
       .then(user => {
@@ -62,63 +73,23 @@ module.exports = async function (fastify, opts) {
         bcrypt.compare(password, user.password, (err, data) => {
             if (err) throw err
             if (data) {
-              const userId = data.id;
-              const accessToken = fastify.jwt.sign({ userId })
+              const accessToken = tokenGenerator({"userId": data.id})
               return reply.status(200).send({ msg: "Login success", accessToken })
             } else {
               return reply.status(401).send({ msg: "Invalid credencial" })
             }
         })
     })
-
-    // -------REFERENCE -----//
-//     const verificacion = express.Router();
-// verificacion.use((req, res, next) => { // middleware
-//     let token = req.headers['x-access-token'] || req.headers['authorization']
-//     if(!token){
-//         res.status(401).send({
-//             error: "Token is necessary"
-//         })
-//         return
-//     }
-//     if (token.startsWith("Bearer ")){
-//         token = token.slice(7, token.length)
-//         console.log(token)
-//     }
-//     if(token){
-//         jwt.verify(token, server.get("key"), (error, decoded) => {
-//             if(error){
-//                 return res.json({
-//                     message: "EL TOKEN NO ES VÁLIDO"
-//                 })
-//             }else{
-//                 req.decoded = decoded;
-//                 next()
-//             }
-//         })
-//     }
-// })
-    // -------REFERENCE -----//
-
-      // bcrypt.compare(password, foundUser.password, function(err, data, reply) {
-      //   if(err){
-      //     throw err
-      //   } if(data) {
-      //     const  userid  = foundUser.id
-      //    const accessToken = fastify.jwt.sign({ userid })
-      //    return accessToken;
-      //   }
-      //   else {
-      //     return reply.status(401).json({ msg: "Invalid credencial" })
-      //   }});
-        
-      } 
+    } 
     catch(err){
       reply.send(err, "este errawr")
     }
   })
+  
 
-  fastify.delete('/:userId', async function (request, reply) {
+ 
+
+  router.delete('/:userId', async function (request, reply) {
     const { userId } = request.params
     try {
       const deletedUser = await deleteUserById(userId)
@@ -127,4 +98,6 @@ module.exports = async function (fastify, opts) {
       return e
     }
   })
-}
+
+
+module.exports = router;

@@ -1,4 +1,6 @@
 'use strict'
+const { Router } = require('express'); 
+const router = Router();
 const {
   getAllOwners,
   getOwnerById,
@@ -6,12 +8,10 @@ const {
   deleteOwnerById
 } = require('../../controllers/owner')
 const { pagination } = require('../../utils/pagination')
-const bcrypt = require("bcrypt")
 require('dotenv')
 const owner = require('../../models/Owner')
 
-module.exports = async function (fastify, opts) {
-  fastify.get('/', async function (request, reply) {
+  router.get('/', async function (request, reply) {
     try {
       const { page, limit } = request.query
       const owners = await getAllOwners()
@@ -22,7 +22,7 @@ module.exports = async function (fastify, opts) {
     }
   })
 
-  fastify.get('/:ownerId', async function (request, reply) {
+  router.get('/:ownerId', async function (request, reply) {
     const { ownerId } = request.params
     try {
       const owner = await getOwnerById(ownerId)
@@ -32,7 +32,7 @@ module.exports = async function (fastify, opts) {
     }
   })
 
-  fastify.post('/', async function (request, reply) {
+  router.post('/', async function (request, reply) {
     const { name, contact, email, username, password } = request.body
     try {
       const newOwner = await createOwner(
@@ -42,39 +42,26 @@ module.exports = async function (fastify, opts) {
         username,
         password
       )
-      const token = fastify.jwt.sign({ newOwner })
-      return reply.send({newOwner, token})
-      
+      return reply.send({newOwner})
     } catch (e) {
       return e
     }
   })
 
-  fastify.post('/login', function(request, reply){
-    const{ email, password} = request.body
+  router.post("/login", async (request, reply) => {
+    const{ email } = request.body;
     try{
       owner.findOne({email})
       .then(owner => {
-        if (!owner) return reply.status(400).send({ msg: "Owner not exist" })
-        bcrypt.compare(password, owner.password, (err, data) => {
-            if (err) throw err
-            if (data) {
-              const ownerId = data.id;
-              const accessToken = fastify.jwt.sign({ ownerId })
-              return reply.status(200).send({ msg: "Login success", accessToken })
-            } else {
-              return reply.status(401).send({ msg: "Invalid credencial" })
-            }
-        })
-    })
-  
-      } 
-    catch(err){
-      reply.send(err, "este errawr")
+        if(!owner) return reply.status(400).send({registered: false})
+        reply.status(200).send({registered: true})
+      })
+    }catch (e) {
+      return e
     }
   })
 
-  fastify.delete('/:ownerId', async function (request, reply) {
+  router.delete('/:ownerId', async function (request, reply) {
     const { ownerId } = request.params
     try {
       const deletedOwner = await deleteOwnerById(ownerId)
@@ -83,4 +70,6 @@ module.exports = async function (fastify, opts) {
       return e
     }
   })
-}
+
+
+module.exports = router;
