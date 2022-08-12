@@ -6,7 +6,6 @@ const {
   deleteOwnerById,
   updatedOwner
 } = require('../../controllers/owner')
-const { pagination } = require('../../utils/pagination')
 const bcrypt = require("bcrypt")
 require('dotenv')
 const owner = require('../../models/Owner')
@@ -14,10 +13,8 @@ const owner = require('../../models/Owner')
 module.exports = async function (fastify, opts) {
   fastify.get('/', async function (request, reply) {
     try {
-      const { page, limit } = request.query
       const owners = await getAllOwners()
-      const result = pagination(owners, page, limit)
-      return reply.send(result)
+      return reply.send(owners)
     } catch (e) {
       return reply.lo.error(e)
     }
