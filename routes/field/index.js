@@ -119,7 +119,7 @@ const {
 
   router.put('/:fieldId', async function (request, reply) {
     const { fieldId } = request.params
-    const { price, availability, image, name, location, type, horario } =
+    const { price, availability, image, name, location, type, horario, isActive } =
       request.body
     try {
       const updateResult = await updateField(
@@ -138,13 +138,15 @@ const {
       return e
     }
   })
-  //aca deberia llegar el email por body 
+  
+
   router.post('/:id/reviews', async function (request, reply) {
      const fieldId = request.params.id
     try {
       const { idUser, rating, review } = request.body
 
       const newReviews = await registerReviews(fieldId, idUser, rating, review)
+      await getAverage(fieldId)
       return reply.send(newReviews)
     } catch (e) {
       return e
@@ -161,14 +163,25 @@ const {
   })
 
 
-  router.get('/reviews/:id/average', async function (request, reply){
-    try{
-      const idField = request.params.id
-      const rev = await getAverage(idField)
-    }catch(e){
-      return e
-    }
-  })
+  // router.get('/reviews/:id/average', async function (request, reply){
+  //   try{
+  //     const idField = request.params.id
+  //     const rev = await getAverage(idField)
+  //     return reply.send(rev)
+  //   }catch(e){
+  //     return e
+  //   }
+  // })
+
+// router.get('/reviews/:id/average', async function(req, res) {
+//   try {
+//     const {id} = req.params
+//     const rev = await getAverage(id)
+//     return res.json(rev)
+//   } catch (e) {
+//     return e
+//   }
+// })
 
   /*  
   TODO: necesitamos realizar un metodo para poder alternar entre no/disponible
