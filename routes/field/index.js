@@ -129,20 +129,21 @@ const {
         name,
         location,
         type,
-        horario
+        horario,
+        isActive
       )
       return reply.send(updateResult)
     } catch (e) {
       return e
     }
   })
-
-  router.post('/reviews', async function (request, reply) {
-    // const {fieldId} = request.params
+  //aca deberia llegar el email por body 
+  router.post('/:id/reviews', async function (request, reply) {
+     const fieldId = request.params.id
     try {
-      const { fieldId, rating, review } = request.body
+      const { idUser, rating, review } = request.body
 
-      const newReviews = await registerReviews(fieldId, rating, review)
+      const newReviews = await registerReviews(fieldId, idUser, rating, review)
       return reply.send(newReviews)
     } catch (e) {
       return e

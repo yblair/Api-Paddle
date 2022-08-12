@@ -1,6 +1,7 @@
 const PadelField = require('../models/PadelField')
 const Owner = require('../models/Owner')
 const Reviews = require('../models/Reviews')
+const User = require('../models/User')
 
 async function getAllFields() {
   try {
@@ -122,20 +123,22 @@ async function getPriceByRange(minPrice, maxPrice)
   }
 }
 
-async function updateField(fieldId, price, availability, image, name, location, type, horario) {
+async function updateField(fieldId, price, availability, image, name, location, type, horario, isActive) {
   try{
     
-      const updateField = await PadelField.findByIdAndUpdate(fieldId, {price, availability, image, name, location, type, horario} , {new:true})
+      const updateField = await PadelField.findByIdAndUpdate(fieldId, {price, availability, image, name, location, type, horario, isActive} , {new:true})
       return updateField;
   }catch(e){
     return e
   }
 }
 
-async function registerReviews( fielId, rating, review) {
+//crear la review
+async function registerReviews( fielId, idUser, rating, review) {
   try {
-      // const search = await PadelField.findById(fielId);
+      
      const newReviews = await Reviews.create({
+      idUser,
           rating,
           review,
           isActive: true,
@@ -147,13 +150,21 @@ async function registerReviews( fielId, rating, review) {
               }
           }
       })
+      await User.findByIdAndUpdate(idUser ,{ 
+        $push: {
+             review: {
+                  _id: newReviews._id
+        }}
+      })
       return newReviews.save()
   }catch(e) {
       return e
   }
   
 }
+//f que haga el push de la review al schema user
 
+//y esto?
 async function getReviews() {
   try {
       const reviews = await Reviews.find({isActive: true});
