@@ -116,7 +116,7 @@ const {
     }
   })
 
-  fastify.put('/:fieldId', async function (request, reply) {
+  router.put('/:fieldId', async function (request, reply) {
     const { fieldId } = request.params
     const { price, availability, image, name, location, type, horario } =
       request.body
@@ -137,7 +137,7 @@ const {
     }
   })
 
-  fastify.post('/reviews', async function (request, reply) {
+  router.post('/reviews', async function (request, reply) {
     // const {fieldId} = request.params
     try {
       const { fieldId, rating, review } = request.body
@@ -149,7 +149,7 @@ const {
     }
   })
 
-  fastify.get('/reviews', async function (request, reply) {
+  router.get('/reviews', async function (request, reply) {
     try {
       const reviews = await getReviews()
       return reply.send(reviews)

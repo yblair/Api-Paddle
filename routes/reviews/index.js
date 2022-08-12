@@ -1,4 +1,6 @@
 'use strict'
+const { Router } = require('express'); 
+const router = Router();
 
 const {
     getReviews,
@@ -7,8 +9,7 @@ const {
 
 // A modo de prueba!!
 
-module.exports = async function (fastify, opts) {
-    fastify.get('/', async function(request, reply) {
+    router.get('/', async function(request, reply) {
         try {
             const reviews = await getReviews()
             return reply.send(reviews)
@@ -17,7 +18,7 @@ module.exports = async function (fastify, opts) {
         }
     });
 
-    // fastify.post('/:id/reviews', async function(request, reply) {
+    // router.post('/:id/reviews', async function(request, reply) {
     //     const {fieldId} = request.params
     //     try {
     //         const { rating, review } = request.body
@@ -29,4 +30,4 @@ module.exports = async function (fastify, opts) {
     //     }
     // })
 
-}
+module.exports = router;
