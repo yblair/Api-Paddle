@@ -5,9 +5,10 @@ const {
   getAllUsers,
   getUserById,
   createUser,
-  deleteUserById
+  deleteUserById,
+  updateUser
 } = require('../../controllers/user')
-const { pagination } = require('../../utils/pagination')
+
 require('dotenv')
 const user = require('../../models/User')
 const {tokenGenerator} = require("../../controllers/tokenGenerator")
@@ -16,10 +17,8 @@ const bcrypt = require("bcrypt")
 
   router.get('/', async function (request, reply) {
     try {
-      const { page, limit } = request.query
       const users = await getAllUsers()
-      const result = pagination(users, page, limit)
-      return reply.send(result)
+      return reply.send(users)
     } catch (e) {
       return reply.log.error(e)
     }
@@ -57,7 +56,7 @@ const bcrypt = require("bcrypt")
       )
        const token = tokenGenerator({newUser})
 
-      return reply.send({newUser, token})
+      return reply.send({ newUser, token })
     } catch (e) {
       return e
     }
@@ -83,6 +82,7 @@ const bcrypt = require("bcrypt")
     } 
     catch(err){
       reply.send(err, "este errawr")
+
     }
   })
   
@@ -99,5 +99,20 @@ const bcrypt = require("bcrypt")
     }
   })
 
+
+
+
+
+  router.put('/:userId', async function (request, reply) {
+    const { userId } = request.params
+    const { password, contact, username } = request.body
+    try {
+      const updateResult = await updateUser(userId, password, username, contact)
+      return reply.send(updateResult)
+    } catch (e) {
+      return e
+    }
+  })
+}
 
 module.exports = router;

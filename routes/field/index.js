@@ -10,18 +10,18 @@ const {
   filterByAvailability,
   sortFieldBy,
   searhcFieldByName,
-  getPriceByRange
+  getPriceByRange,
+  updateField,
+  registerReviews,
+  getReviews
 } = require('../../controllers/field')
-const { pagination } = require('../../utils/pagination')
 // const PadelField = require('../../models/PadelField')
 // const {jwtCheck} = require("../../middleware/middleware")
 
   router.get('/', async function (request, reply) {
     try {
-      const { page, limit } = request.query
       const fields = await getAllFields()
-      const result = pagination(fields, page, limit)
-      return reply.send(result)
+      return reply.send(fields)
     } catch (e) {
       return reply.log.error(e)
     }
@@ -29,27 +29,23 @@ const { pagination } = require('../../utils/pagination')
 
   router.get('/typeField', async function (request, reply) {
     try {
-      const { typeField, page, limit } = request.query
+      const { typeField } = request.query
       const bytype = await getTypeFieldsFilter(typeField)
-      const result = pagination(bytype, page, limit)
-      return reply.send(result)
+      return reply.send(bytype)
     } catch (e) {
       return e
     }
   })
 
-  router.get('/rangePrice', async function (request, reply)
-  {
-    try
-    {
-      const {minPrice, maxPrice, page, limit} = request.query;
-      const applyFilter = await getPriceByRange(minPrice, maxPrice);
-      const result = pagination(applyFilter, page, limit)
-      return reply.send(result);
-    }
-    catch(e)
-    {
-      return e;
+
+  router.get('/rangePrice', async function (request, reply) {
+    try {
+      const { minPrice, maxPrice } = request.query
+      const applyFilter = await getPriceByRange(minPrice, maxPrice)
+      return reply.send(applyFilter)
+    } catch (e) {
+      return e
+
     }
   })
 
@@ -92,10 +88,9 @@ const { pagination } = require('../../utils/pagination')
 
   router.get('/sort', async function (request, reply) {
     try {
-      const {price, page, limit } = request.query
+      const { price } = request.query
       const byprice = await sortFieldBy(price)
-      const result = pagination(byprice, page, limit)
-      return reply.send(result)
+      return reply.send(byprice)
     } catch (e) {
       return e
     }
@@ -103,10 +98,9 @@ const { pagination } = require('../../utils/pagination')
 
   router.get('/able', async function (request, reply) {
     try {
-      const {active, page, limit } = request.query
+      const { active } = request.query
       const able = await filterByAvailability(active)
-      const result = pagination(able, page, limit)
-      return reply.send(result)
+      return reply.send(able)
     } catch (e) {
       return reply.log.error(e)
     }
@@ -114,10 +108,51 @@ const { pagination } = require('../../utils/pagination')
 
   router.get('/search', async function (request, reply) {
     try {
-      const { name, page, limit } = request.query
-      const search = await searhcFieldByName(name);
-      const result = pagination(search, page, limit)
-      return reply.send(result)
+      const { name } = request.query
+      const search = await searhcFieldByName(name)
+      return reply.send(search)
+    } catch (e) {
+      return e
+    }
+  })
+
+  fastify.put('/:fieldId', async function (request, reply) {
+    const { fieldId } = request.params
+    const { price, availability, image, name, location, type, horario } =
+      request.body
+    try {
+      const updateResult = await updateField(
+        fieldId,
+        price,
+        availability,
+        image,
+        name,
+        location,
+        type,
+        horario
+      )
+      return reply.send(updateResult)
+    } catch (e) {
+      return e
+    }
+  })
+
+  fastify.post('/reviews', async function (request, reply) {
+    // const {fieldId} = request.params
+    try {
+      const { fieldId, rating, review } = request.body
+
+      const newReviews = await registerReviews(fieldId, rating, review)
+      return reply.send(newReviews)
+    } catch (e) {
+      return e
+    }
+  })
+
+  fastify.get('/reviews', async function (request, reply) {
+    try {
+      const reviews = await getReviews()
+      return reply.send(reviews)
     } catch (e) {
       return e
     }

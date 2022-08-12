@@ -5,18 +5,17 @@ const {
   getAllOwners,
   getOwnerById,
   createOwner,
-  deleteOwnerById
+  deleteOwnerById,
+  updatedOwner
 } = require('../../controllers/owner')
-const { pagination } = require('../../utils/pagination')
+
 require('dotenv')
 const owner = require('../../models/Owner')
 
   router.get('/', async function (request, reply) {
     try {
-      const { page, limit } = request.query
       const owners = await getAllOwners()
-      const result = pagination(owners, page, limit)
-      return reply.send(result)
+      return reply.send(owners)
     } catch (e) {
       return reply.lo.error(e)
     }
@@ -72,4 +71,21 @@ const owner = require('../../models/Owner')
   })
 
 
+
+
+
+  router.put('/:ownerId', async function (request, reply) {
+    const { ownerId } = request.params
+    const { password, username, contact } = request.body;
+   try {
+    const updateResult = await updatedOwner(ownerId, password, username, contact)
+    return reply.send(updateResult)
+   
+   } catch (e) {
+     return e
+   }
+  })
+}
+
 module.exports = router;
+
