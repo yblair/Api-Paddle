@@ -13,7 +13,8 @@ const {
   getPriceByRange,
   updateField,
   registerReviews,
-  getReviews
+  getReviews,
+  getAverage
 } = require('../../controllers/field')
 // const PadelField = require('../../models/PadelField')
 // const {jwtCheck} = require("../../middleware/middleware")
@@ -155,6 +156,16 @@ const {
       const reviews = await getReviews()
       return reply.send(reviews)
     } catch (e) {
+      return e
+    }
+  })
+
+
+  router.get('/reviews/:id/average', async function (request, reply){
+    try{
+      const idField = request.params.id
+      const rev = await getAverage(idField)
+    }catch(e){
       return e
     }
   })
