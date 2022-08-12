@@ -11,6 +11,7 @@ const reviewsSchema = new Schema(
     review: {       
       type: String   
     },
+    idUser: [],
    
     isActive: Boolean
   },

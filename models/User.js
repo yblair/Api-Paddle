@@ -45,6 +45,7 @@ const userSchema = new Schema(
     history: {
       type: Array
     },
+    review: [],
     padelFields: [],
     isActive: Boolean
   },
