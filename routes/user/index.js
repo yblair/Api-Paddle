@@ -87,8 +87,6 @@ const bcrypt = require("bcrypt")
   })
   
 
- 
-
   router.delete('/:userId', async function (request, reply) {
     const { userId } = request.params
     try {
@@ -98,9 +96,6 @@ const bcrypt = require("bcrypt")
       return e
     }
   })
-
-
-
 
 
   router.put('/:userId', async function (request, reply) {
@@ -113,6 +108,5 @@ const bcrypt = require("bcrypt")
       return e
     }
   })
-}
 
 module.exports = router;

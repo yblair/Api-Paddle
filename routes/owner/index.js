@@ -70,10 +70,6 @@ const owner = require('../../models/Owner')
     }
   })
 
-
-
-
-
   router.put('/:ownerId', async function (request, reply) {
     const { ownerId } = request.params
     const { password, username, contact } = request.body;
@@ -85,7 +81,6 @@ const owner = require('../../models/Owner')
      return e
    }
   })
-}
 
 module.exports = router;
 
