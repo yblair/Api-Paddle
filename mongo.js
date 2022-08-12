@@ -1,4 +1,4 @@
-require('dotenv')
+require('dotenv').config()
 const { DATABASE_URL } = process.env
 const mongoose = require('mongoose')
 

@@ -1,4 +1,6 @@
 'use strict'
+const { Router } = require('express'); 
+const router = Router();
 const {
     getBookingsFields,
     setNewBooking,
@@ -6,9 +8,8 @@ const {
     getHours
   } = require('../../controllers/booking')
 
-module.exports = async function (fastify, opts)
-{
-    fastify.get('/', async (request, reply) =>
+
+    router.get('/', async (request, reply) =>
     {
         try
         {
@@ -23,7 +24,7 @@ module.exports = async function (fastify, opts)
         }
     });
 
-    fastify.get('/hours', async (request, reply) =>
+    router.get('/hours', async (request, reply) =>
     {
         try
         {
@@ -38,7 +39,7 @@ module.exports = async function (fastify, opts)
         }
     })
 
-    fastify.post('/', async (request, reply) =>
+    router.post('/', async (request, reply) =>
     {
         try
         {
@@ -53,7 +54,7 @@ module.exports = async function (fastify, opts)
         }
     });
 
-    fastify.delete('/:idBooking', async (request,reply) =>
+    router.delete('/:idBooking', async (request,reply) =>
     {
         try
         {
@@ -67,4 +68,5 @@ module.exports = async function (fastify, opts)
             return e;
         }
     })
-}
+
+module.exports = router;

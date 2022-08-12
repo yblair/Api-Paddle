@@ -1,4 +1,6 @@
 'use strict'
+const { Router } = require('express'); 
+const router = Router();
 const {
   deleteField,
   registerField,
@@ -14,9 +16,9 @@ const {
   getReviews
 } = require('../../controllers/field')
 // const PadelField = require('../../models/PadelField')
+// const {jwtCheck} = require("../../middleware/middleware")
 
-module.exports = async function (fastify, opts) {
-  fastify.get('/', async function (request, reply) {
+  router.get('/', async function (request, reply) {
     try {
       const fields = await getAllFields()
       return reply.send(fields)
@@ -25,7 +27,7 @@ module.exports = async function (fastify, opts) {
     }
   })
 
-  fastify.get('/typeField', async function (request, reply) {
+  router.get('/typeField', async function (request, reply) {
     try {
       const { typeField } = request.query
       const bytype = await getTypeFieldsFilter(typeField)
@@ -35,17 +37,19 @@ module.exports = async function (fastify, opts) {
     }
   })
 
-  fastify.get('/rangePrice', async function (request, reply) {
+
+  router.get('/rangePrice', async function (request, reply) {
     try {
       const { minPrice, maxPrice } = request.query
       const applyFilter = await getPriceByRange(minPrice, maxPrice)
       return reply.send(applyFilter)
     } catch (e) {
       return e
+
     }
   })
 
-  fastify.get('/:filedId', async function (request, reply) {
+  router.get('/:filedId', async function (request, reply) {
     const { filedId } = request.params
     try {
       const field = await getFieldById(filedId)
@@ -55,7 +59,7 @@ module.exports = async function (fastify, opts) {
     }
   })
 
-  fastify.post('/', async function (request, reply) {
+  router.post('/', async function (request, reply) {
     const { name, location, image, type, price, ownerId } = request.body
     try {
       const newFiled = await registerField(
@@ -72,7 +76,7 @@ module.exports = async function (fastify, opts) {
     }
   })
 
-  fastify.delete('/:fieldId', async function (request, reply) {
+  router.delete('/:fieldId', async function (request, reply) {
     const { fieldId } = request.params
     try {
       const deletecField = await deleteField(fieldId)
@@ -82,7 +86,7 @@ module.exports = async function (fastify, opts) {
     }
   })
 
-  fastify.get('/sort', async function (request, reply) {
+  router.get('/sort', async function (request, reply) {
     try {
       const { price } = request.query
       const byprice = await sortFieldBy(price)
@@ -92,7 +96,7 @@ module.exports = async function (fastify, opts) {
     }
   })
 
-  fastify.get('/able', async function (request, reply) {
+  router.get('/able', async function (request, reply) {
     try {
       const { active } = request.query
       const able = await filterByAvailability(active)
@@ -102,7 +106,7 @@ module.exports = async function (fastify, opts) {
     }
   })
 
-  fastify.get('/search', async function (request, reply) {
+  router.get('/search', async function (request, reply) {
     try {
       const { name } = request.query
       const search = await searhcFieldByName(name)
@@ -157,7 +161,7 @@ module.exports = async function (fastify, opts) {
   /*  
   TODO: necesitamos realizar un metodo para poder alternar entre no/disponible
         
-  fastify.put('/:fieldId', async function (request, reply) {
+  router.put('/:fieldId', async function (request, reply) {
     const MESSAGE = 'Field availability change'
     try {
       const { fieldId } = request.params
@@ -169,4 +173,5 @@ module.exports = async function (fastify, opts) {
       return e
     }
   }) */
-}
+
+  module.exports = router;

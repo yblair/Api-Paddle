@@ -1,4 +1,6 @@
 'use strict'
+const { Router } = require('express'); 
+const router = Router();
 const {
   getAllUsers,
   getUserById,
@@ -6,12 +8,14 @@ const {
   deleteUserById,
   updateUser
 } = require('../../controllers/user')
-const bcrypt = require('bcrypt')
+
 require('dotenv')
 const user = require('../../models/User')
+const {tokenGenerator} = require("../../controllers/tokenGenerator")
+const jwtCheck = require("../../middleware/middleware")
+const bcrypt = require("bcrypt")
 
-module.exports = async function (fastify, opts) {
-  fastify.get('/', async function (request, reply) {
+  router.get('/', async function (request, reply) {
     try {
       const users = await getAllUsers()
       return reply.send(users)
@@ -20,7 +24,16 @@ module.exports = async function (fastify, opts) {
     }
   })
 
-  fastify.get('/:userId', async function (request, reply) {
+  router.get('/info', jwtCheck, async (request, reply) => {
+    try{
+      reply.status(200).send("SUCCESSFULLY CONNECTED")
+      } 
+    catch(err){
+      reply.send({msg: "Unathorized"})
+    }
+  })
+
+  router.get('/:userId', async function (request, reply) {
     const { userId } = request.params
     try {
       const user = await getUserById(userId)
@@ -30,7 +43,7 @@ module.exports = async function (fastify, opts) {
     }
   })
 
-  fastify.post('/', async function (request, reply) {
+  router.post('/', async function (request, reply) {
     const { username, name, lastName, contact, email, password } = request.body
     try {
       const newUser = await createUser(
@@ -41,8 +54,7 @@ module.exports = async function (fastify, opts) {
         email,
         password
       )
-
-      const token = fastify.jwt.sign({ newUser })
+       const token = tokenGenerator({newUser})
 
       return reply.send({ newUser, token })
     } catch (e) {
@@ -50,28 +62,34 @@ module.exports = async function (fastify, opts) {
     }
   })
 
-  fastify.post('/login', function (request, reply) {
-    const { email, password } = request.body
-    try {
-      user.findOne({ email }).then((user) => {
-        if (!user) return reply.status(400).send({ msg: 'User not exist' })
+  router.post("/login", async (request, reply) => {
+    const{ email, password } = request.body;
+    if(!email || !password) return reply.status(400).json({msg: "email and password are required"})
+    try{
+      user.findOne({email})
+      .then(user => {
+        if (!user) return reply.status(400).send({ msg: "User not exist" })
         bcrypt.compare(password, user.password, (err, data) => {
-          if (err) throw err
-          if (data) {
-            const userId = data.id
-            const accessToken = fastify.jwt.sign({ userId })
-            return reply.status(200).send({ msg: 'Login success', accessToken })
-          } else {
-            return reply.status(401).send({ msg: 'Invalid credencial' })
-          }
+            if (err) throw err
+            if (data) {
+              const accessToken = tokenGenerator({"userId": data.id})
+              return reply.status(200).send({ msg: "Login success", accessToken })
+            } else {
+              return reply.status(401).send({ msg: "Invalid credencial" })
+            }
         })
-      })
-    } catch (err) {
-      reply.send(err, 'este errawr')
+    })
+    } 
+    catch(err){
+      reply.send(err, "este errawr")
+
     }
   })
+  
 
-  fastify.delete('/:userId', async function (request, reply) {
+ 
+
+  router.delete('/:userId', async function (request, reply) {
     const { userId } = request.params
     try {
       const deletedUser = await deleteUserById(userId)
@@ -81,7 +99,11 @@ module.exports = async function (fastify, opts) {
     }
   })
 
-  fastify.put('/:userId', async function (request, reply) {
+
+
+
+
+  router.put('/:userId', async function (request, reply) {
     const { userId } = request.params
     const { password, contact, username } = request.body
     try {
@@ -92,3 +114,5 @@ module.exports = async function (fastify, opts) {
     }
   })
 }
+
+module.exports = router;
