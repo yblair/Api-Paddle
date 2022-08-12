@@ -34,11 +34,7 @@ const padelFieldsSchema = new Schema(
       type: Number,
       require: true
     },
-    ratingsAverage: { 
-      type: Number,             
-      min: [1, 'Rating must be above 1.0'],       
-      max: [5, 'Rating must be below 5.0'], 
-    },
+    ratingsAverage: [],
     horario: [],
     review: [ 
       // {
@@ -47,6 +43,7 @@ const padelFieldsSchema = new Schema(
       //   require: true
       // }
     ],
+   
     isActive: Boolean
   },
   {
@@ -54,6 +51,9 @@ const padelFieldsSchema = new Schema(
     versionKey: false
   }
 )
+
+
+
 
 padelFieldsSchema.set('toJSON', {
   transform: (document, returnedObject) => {
