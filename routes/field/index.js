@@ -92,7 +92,7 @@ const jwtCheck = require("../../middleware/middleware")
   })
 
   router.post('/', async function (request, reply) {
-    const { name, location, image, type, price, ownerId } = request.body
+    const { name, location, image, type, price, ownerId,  availability } = request.body
     try {
       const newFiled = await registerField(
         name,
@@ -100,7 +100,8 @@ const jwtCheck = require("../../middleware/middleware")
         image,
         type,
         price,
-        ownerId
+        ownerId,
+        availability
       )
       return reply.send(newFiled)
     } catch (e) {
