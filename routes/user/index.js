@@ -26,7 +26,7 @@ const bcrypt = require("bcrypt")
 
   router.get('/info', jwtCheck, async (request, reply) => {
     try{
-      reply.status(200).send("SUCCESSFULLY CONNECTED")
+      reply.status(200).send("HELLO FROM PROTECTED ROUTE")
       } 
     catch(err){
       reply.send({msg: "Unathorized"})
@@ -64,18 +64,18 @@ const bcrypt = require("bcrypt")
 
   router.post("/login", async (request, reply) => {
     const{ email, password } = request.body;
-    if(!email || !password) return reply.status(400).json({msg: "email and password are required"})
+    if(!email || !password) return reply.status(400).json({auth: false, msg: "email and password are required"})
     try{
       user.findOne({email})
       .then(user => {
-        if (!user) return reply.status(400).send({ msg: "User not exist" })
+        if (!user) return reply.status(400).send({ auth: false, msg: "User not exist" })
         bcrypt.compare(password, user.password, (err, data) => {
             if (err) throw err
             if (data) {
               const accessToken = tokenGenerator({"userId": data.id})
-              return reply.status(200).send({ msg: "Login success", accessToken })
+              return reply.status(200).send({ auth: true, msg: "Login success", accessToken })
             } else {
-              return reply.status(401).send({ msg: "Invalid credencial" })
+              return reply.status(401).send({ auth: false, msg: "Invalid credential" })
             }
         })
     })

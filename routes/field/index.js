@@ -17,11 +17,12 @@ const {
   getAverage
 } = require('../../controllers/field')
 // const PadelField = require('../../models/PadelField')
-// const {jwtCheck} = require("../../middleware/middleware")
+const jwtCheck = require("../../middleware/middleware")
 
   router.get('/', async function (request, reply) {
     try {
       const fields = await getAllFields()
+      console.log(fields)
       return reply.send(fields)
     } catch (e) {
       return reply.log.error(e)
@@ -38,6 +39,36 @@ const {
     }
   })
 
+  router.get('/sort', async function (request, reply) {
+    try {
+      const { price } = request.query
+      const byprice = await sortFieldBy(price)
+      console.log(byprice)
+      return reply.send(byprice)
+    } catch (e) {
+      return e
+    }
+  })
+
+  router.get('/able', async function (request, reply) {
+    try {
+      const { active } = request.query
+      const able = await filterByAvailability(active)
+      return reply.send(able)
+    } catch (e) {
+      return reply.log.error(e)
+    }
+  })
+
+  router.get('/search', async function (request, reply) {
+    try {
+      const { name } = request.query
+      const search = await searhcFieldByName(name)
+      return reply.send(search)
+    } catch (e) {
+      return e
+    }
+  })
 
   router.get('/rangePrice', async function (request, reply) {
     try {
@@ -82,36 +113,6 @@ const {
     try {
       const deletecField = await deleteField(fieldId)
       return reply.send(deletecField)
-    } catch (e) {
-      return e
-    }
-  })
-
-  router.get('/sort', async function (request, reply) {
-    try {
-      const { price } = request.query
-      const byprice = await sortFieldBy(price)
-      return reply.send(byprice)
-    } catch (e) {
-      return e
-    }
-  })
-
-  router.get('/able', async function (request, reply) {
-    try {
-      const { active } = request.query
-      const able = await filterByAvailability(active)
-      return reply.send(able)
-    } catch (e) {
-      return reply.log.error(e)
-    }
-  })
-
-  router.get('/search', async function (request, reply) {
-    try {
-      const { name } = request.query
-      const search = await searhcFieldByName(name)
-      return reply.send(search)
     } catch (e) {
       return e
     }
