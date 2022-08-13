@@ -13,7 +13,8 @@ const {
   getPriceByRange,
   updateField,
   registerReviews,
-  getReviews
+  getReviews,
+  getAverage
 } = require('../../controllers/field')
 // const PadelField = require('../../models/PadelField')
 const jwtCheck = require("../../middleware/middleware")
@@ -119,7 +120,7 @@ const jwtCheck = require("../../middleware/middleware")
 
   router.put('/:fieldId', async function (request, reply) {
     const { fieldId } = request.params
-    const { price, availability, image, name, location, type, horario } =
+    const { price, availability, image, name, location, type, horario, isActive } =
       request.body
     try {
       const updateResult = await updateField(
@@ -130,20 +131,23 @@ const jwtCheck = require("../../middleware/middleware")
         name,
         location,
         type,
-        horario
+        horario,
+        isActive
       )
       return reply.send(updateResult)
     } catch (e) {
       return e
     }
   })
+  
 
-  router.post('/reviews', async function (request, reply) {
-    // const {fieldId} = request.params
+  router.post('/:id/reviews', async function (request, reply) {
+     const fieldId = request.params.id
     try {
-      const { fieldId, rating, review } = request.body
+      const { idUser, rating, review } = request.body
 
-      const newReviews = await registerReviews(fieldId, rating, review)
+      const newReviews = await registerReviews(fieldId, idUser, rating, review)
+      await getAverage(fieldId)
       return reply.send(newReviews)
     } catch (e) {
       return e
@@ -158,6 +162,27 @@ const jwtCheck = require("../../middleware/middleware")
       return e
     }
   })
+
+
+  // router.get('/reviews/:id/average', async function (request, reply){
+  //   try{
+  //     const idField = request.params.id
+  //     const rev = await getAverage(idField)
+  //     return reply.send(rev)
+  //   }catch(e){
+  //     return e
+  //   }
+  // })
+
+// router.get('/reviews/:id/average', async function(req, res) {
+//   try {
+//     const {id} = req.params
+//     const rev = await getAverage(id)
+//     return res.json(rev)
+//   } catch (e) {
+//     return e
+//   }
+// })
 
   /*  
   TODO: necesitamos realizar un metodo para poder alternar entre no/disponible
