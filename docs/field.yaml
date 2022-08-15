@@ -1,0 +1,142 @@
+paths:
+  /field:
+    post:
+      tags:
+        - Field
+      summary: creates a new field
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: sign up
+          description: Creates a new field
+          required: false
+          schema:
+            $ref: '#/definitions/Field'
+      responses:
+        201:
+          description: An object with new field detail
+    get:
+      tags:
+        - Field
+      summary: get all fields
+      produces:
+        - application/json
+      responses:
+        200:
+          description: An object's array with fields
+  /field{?typeField}:
+    get:
+      tags:
+        - Field
+      summary: get field by type
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: typeField
+          required: true
+          schema: 
+            type: string
+      responses:
+        200:
+          description: An object with field detail
+  /field/{id}:
+    get:
+      tags:
+        - Field
+      summary: get field detail
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          required: false
+      responses:
+        200:
+          description: An object with field detail
+    put:
+      tags:
+        - Field
+      summary: update field info
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+        - in: body
+          name: new info
+          description: modified field info
+          required: false
+          schema:
+            $ref: '#/definitions/Field'
+      responses:
+        200:
+          description: An object with updated field info
+    delete:
+      tags:
+        - Field
+      summary: delete an field
+      produces:
+        - application/json
+      parameters:
+        - in: params
+          name: field id
+      responses:
+        204:
+          description: The server successfully processed the request, but is not returning any content
+definitions:
+  Field:
+    type: object
+    properties:
+      field:
+        type: object
+        properties:
+          id:
+            type: string
+            format: objectId
+          name:
+            type: string
+          location:
+            type: string
+          owner:
+            type: string 
+            format: objectId
+          type:
+            type: string
+          score:
+            type: number
+          price:
+            type: number
+          ratingAverage:
+            type: number
+          image:
+            type: string
+            format: uri
+          availability:
+            type: boolean
+          timetable:
+            type: array
+            items:
+              type: string
+              format: time
+          review:
+            type: array
+            items:
+              type: object
+              properties:
+                userId:
+                  type: string
+                  format: objectId
+                rating:
+                  type: number
+                review:
+                  type: string
+          createAt:
+            type: string
+            format: date-time
+          updateAt:
+            type: string
+            format: date-time
+          isActive:
+            type: boolean

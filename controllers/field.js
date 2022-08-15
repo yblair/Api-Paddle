@@ -145,9 +145,6 @@ async function registerReviews( fieldId, idUser, rating, review) {
      })
       await PadelField.findByIdAndUpdate(fieldId, {
           $push: {
-            /*   review: {
-                  _id: newReviews._id
-              } */
               review: {
                 rating,
                 idUser,
