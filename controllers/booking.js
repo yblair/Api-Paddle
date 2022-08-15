@@ -1,4 +1,7 @@
 const Booking = require('../models/booking');
+const {sendMail} = require('../utils/email');
+const {getUserById} = require('./user');
+const {getFieldById} = require('./field');
 
 const horarios = [9,10,11,12,13,14,15,16,17,18];
 
@@ -30,7 +33,11 @@ async function setNewBooking(idUser, idField, date)
                 date,
                 isActive: true
             });
-
+        const user = await getUserById(idUser);
+        const field = await getFieldById(idField);
+        const subject = 'Confirmacion de reservacion';
+        const body = `Hola ${user.name}, has reservado la cancha ${field.name} para el dia ${date}`;
+        sendMail(user.email, body, subject);
         return newBooking;
     }
     catch(e)

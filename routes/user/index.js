@@ -1,5 +1,5 @@
 'use strict'
-const { Router } = require('express'); 
+const { Router } = require('express');
 const router = Router();
 const {
   getAllUsers,
@@ -8,6 +8,7 @@ const {
   deleteUserById,
   updateUser
 } = require('../../controllers/user')
+const {sendMail} = require('../../utils/email');
 
 require('dotenv')
 const user = require('../../models/User')
@@ -27,7 +28,7 @@ const bcrypt = require("bcrypt")
   router.get('/info', jwtCheck, async (request, reply) => {
     try{
       reply.status(200).send("HELLO FROM PROTECTED ROUTE")
-      } 
+      }
     catch(err){
       reply.send({msg: "Unathorized"})
     }
@@ -55,7 +56,9 @@ const bcrypt = require("bcrypt")
         password
       )
        const token = tokenGenerator({newUser})
-
+       const subject = 'Bienvenido a Padel Field';
+       const body = `Hola ${name}, gracias por registrarte en Padel Field`;
+      sendMail(email, body, subject);
       return reply.send({ newUser, token })
     } catch (e) {
       return e
@@ -79,13 +82,12 @@ const bcrypt = require("bcrypt")
             }
         })
     })
-    } 
+    }
     catch(err){
       reply.send(err, "este errawr")
 
     }
   })
-  
 
   router.delete('/:userId', async function (request, reply) {
     const { userId } = request.params
@@ -96,7 +98,6 @@ const bcrypt = require("bcrypt")
       return e
     }
   })
-
 
   router.put('/:userId', async function (request, reply) {
     const { userId } = request.params

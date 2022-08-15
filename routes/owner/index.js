@@ -1,5 +1,5 @@
 'use strict'
-const { Router } = require('express'); 
+const { Router } = require('express');
 const router = Router();
 const {
   getAllOwners,
@@ -8,6 +8,7 @@ const {
   deleteOwnerById,
   updatedOwner
 } = require('../../controllers/owner')
+const {sendMail} = require('../../utils/email');
 
 require('dotenv')
 const owner = require('../../models/Owner')
@@ -41,6 +42,10 @@ const owner = require('../../models/Owner')
         username,
         password
       )
+
+      const subject = 'Bienvenido a Padel Field';
+      const body = `Hola ${name}, gracias por registrarte en Padel Field (PROPIETARIO)`;
+      sendMail(email, body, subject);
       return reply.send({newOwner})
     } catch (e) {
       return e
@@ -76,7 +81,7 @@ const owner = require('../../models/Owner')
    try {
     const updateResult = await updatedOwner(ownerId, password, username, contact)
     return reply.send(updateResult)
-   
+
    } catch (e) {
      return e
    }
