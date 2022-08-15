@@ -37,6 +37,7 @@ const userSchema = new Schema(
     },
     role:{
       type: String,
+      require: true,
       default: 'user'
     },
     score: {

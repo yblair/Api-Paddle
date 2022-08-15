@@ -16,8 +16,6 @@ const {
   getReviews,
   getAverage
 } = require('../../controllers/field')
-// const PadelField = require('../../models/PadelField')
-const jwtCheck = require("../../middleware/middleware")
 
   router.get('/', async function (request, reply) {
     try {
@@ -141,7 +139,6 @@ const jwtCheck = require("../../middleware/middleware")
     }
   })
   
-
   router.post('/:id/reviews', async function (request, reply) {
      const fieldId = request.params.id
     try {
@@ -163,42 +160,5 @@ const jwtCheck = require("../../middleware/middleware")
       return e
     }
   })
-
-
-  // router.get('/reviews/:id/average', async function (request, reply){
-  //   try{
-  //     const idField = request.params.id
-  //     const rev = await getAverage(idField)
-  //     return reply.send(rev)
-  //   }catch(e){
-  //     return e
-  //   }
-  // })
-
-// router.get('/reviews/:id/average', async function(req, res) {
-//   try {
-//     const {id} = req.params
-//     const rev = await getAverage(id)
-//     return res.json(rev)
-//   } catch (e) {
-//     return e
-//   }
-// })
-
-  /*  
-  TODO: necesitamos realizar un metodo para poder alternar entre no/disponible
-        
-  router.put('/:fieldId', async function (request, reply) {
-    const MESSAGE = 'Field availability change'
-    try {
-      const { fieldId } = request.params
-      await PadelField.findByIdAndUpdate(fieldId, {
-        availability: 
-      })
-      return MESSAGE
-    } catch (e) {
-      return e
-    }
-  }) */
 
   module.exports = router;

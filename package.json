@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "tap \"test/**/*.test.js\"",
-    "start": "nodemon -L",
+    "start": "nodemon -L -e yaml, js, json ",
     "lint": "eslint --fix . --ext .js",
     "format": "prettier --write ."
   },
@@ -43,7 +43,9 @@
     "mongoose": "^6.5.0",
     "morgan": "^1.10.0",
     "nodemailer": "^6.7.8",
-    "request": "^2.88.2"
+    "request": "^2.88.2",
+    "swagger-jsdoc": "^6.2.5",
+    "swagger-ui-express": "^4.5.0"
   },
   "devDependencies": {
     "@fastify/swagger": "^7.4.1",

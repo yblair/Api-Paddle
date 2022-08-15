@@ -1,0 +1,108 @@
+paths:
+  /owner:
+    post:
+      tags:
+        - Owner
+      summary: creates a new owner
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: sign up
+          description: Creates a new owner
+          required: false
+          schema:
+            $ref: '#/definitions/Owner'
+      responses:
+        201:
+          description: An object with new owner detail
+    get:
+      tags:
+        - Owner
+      summary: get all owners
+      produces:
+        - application/json
+      responses:
+        200:
+          description: An object's array with owners
+  /owner/{id}:
+    get:
+      tags:
+        - Owner
+      summary: get owner detail
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          required: false
+      responses:
+        200:
+          description: An object with owner detail
+    put:
+      tags:
+        - Owner
+      summary: update owner info
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+        - in: body
+          name: new info
+          description: modified owner info
+          required: false
+          schema:
+            $ref: '#/definitions/Owner'
+      responses:
+        200:
+          description: An object with updated owner info
+    delete:
+      tags:
+        - Owner
+      summary: delete an owner
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+      responses:
+        204:
+          description: The server successfully processed the request, but is not returning any content
+definitions:
+  Owner:
+    type: object
+    properties:
+      owner:
+        type: object
+        properties:
+          id:
+            type: string
+            format: objectId
+          name:
+            type: string
+          ownerName:
+            type: string
+          email:
+            type: string
+            format: email
+          password:
+            type: string
+            format: password
+          contact:
+            type: number
+          role:
+            type: string
+          padelFields:
+            type: array
+            items:
+              type: string
+              id: objectId
+          createdAt:
+            type: string
+            format: date-time
+          updatedAt:
+            type: string
+            format: date-time
+          isActive:
+            type: boolean
