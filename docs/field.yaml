@@ -81,7 +81,7 @@ paths:
         - application/json
       parameters:
         - in: params
-          name: field id
+          name: id
       responses:
         204:
           description: The server successfully processed the request, but is not returning any content
