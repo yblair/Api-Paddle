@@ -4,7 +4,7 @@ const morgan = require('morgan')
 const routes = require('./routes/root')
 const cors = require('cors')
 // const path = require('path')
-const port = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
 require('./mongo.js')
 
 const server = express()
@@ -59,7 +59,7 @@ server.use((err, req, res, next) => {
 })
 
 // port
-server.listen(port, () => {
+server.listen(PORT, () => {
   console.log('%s listening at 3000') // eslint-disable-line no-console
 })
 
