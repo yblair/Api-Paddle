@@ -70,8 +70,7 @@ router.get('/executePayment', (req, res) =>
         },
         (_err, response) =>
         {
-            if(!_err) res.send({msg: 'Payment has been succesfull'});
-            else res.send({err: 'Payment has been rejected'});
+            res.send({msg: response.body.data.status});
         })
     }
     catch(e)
