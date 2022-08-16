@@ -5,8 +5,9 @@ const routes = require('./routes/root')
 const cors = require('cors')
 // const path = require('path')
 const PORT = process.env.PORT || 3000;
-require('./mongo.js')
-
+//require('./mongo.js')
+const conectarDB = require('./mongo')
+conectarDB()
 const server = express()
 
 const swaggerUI = require('swagger-ui-express')
