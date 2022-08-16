@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "tap \"test/**/*.test.js\"",
-    "start": "nodemon -L -e yaml, js, json ",
+    "start": "node app.js",
     "lint": "eslint --fix . --ext .js",
     "format": "prettier --write ."
   },
