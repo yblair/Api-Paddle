@@ -14,15 +14,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/fetichex/henry-pf-backend.git"
+    "url": "git+https://github.com/yblair/Api-Paddle.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/fetichex/henry-pf-backend/issues"
+    "url": "https://github.com/yblair/Api-Paddle/issues"
   },
-  "homepage": "https://github.com/fetichex/henry-pf-backend#readme",
+  "homepage": "https://github.com/yblair/Api-Paddled#readme",
   "dependencies": {
     "@fastify/autoload": "^5.0.0",
     "@fastify/cors": "^8.1.0",
