@@ -4,6 +4,7 @@ const morgan = require('morgan')
 const routes = require('./routes/root')
 const cors = require('cors')
 // const path = require('path')
+require('dotenv').config();
 const PORT = process.env.PORT || 3000;
 //require('./mongo.js')
 const conectarDB = require('./mongo')
